@@ -22,9 +22,35 @@ firebase.initializeApp(firebaseConfig);
 
 const db = admin.firestore();
 
-app.get('/getscreams', (req, res) => {
-    db
-        .collection('screams')
+const FBAuth = (req, res, next) => {
+    let idToken;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        idToken = req.headers.authorization.split('Bearer ')[1];
+    }
+    else {
+        console.error('No Token Found')
+        return res.status(403).json({ error: "Unauthorized" })
+    }
+    admin.auth().verifyIdToken(idToken)
+        .then(decodedToken => {
+            req.user = decodedToken;
+            return db.collection('users')
+                .wherer('userId', '==', req.user.uid)
+                .limit(1)
+                .get();
+        })
+        .then(data => {
+            req.user.handle = data.docs[0]
+                .data().handle();
+            return next();
+        }).catch(err => {
+            console.error('Error while verifying Token', err);
+            return res.status(403).json(err);
+        })
+}
+
+app.get('/getscreams',FBAuth,(req, res) => {
+    db.collection('screams')
         .orderBy('createdAt', 'desc')
         .get()
         .then(data => {
@@ -33,28 +59,31 @@ app.get('/getscreams', (req, res) => {
                 screams.push(
                     {
                         screamId: doc.id,
-                        body: doc().body,
+                        body: doc.data().body,
                         userHandle: doc.data().userHandle,
-                        createdAt: doc().createdAt,
+                        createdAt: doc.data().createdAt,
                         commentCount: doc.data().commentCount,
                         likeCount: doc.data().likeCount
                     }
                 );
             })
+            console.error(screams)
             return res.json(screams);
         })
         .catch(err => {
             console.error(err)
+            return res.json(err);
+
         })
 })
 
-app.post('/insertscreams', (req, res) => {
+app.post('/insertscreams', FBAuth, (req, res) => {
     if (req.method !== "POST") {
         return res.status(400).json({ err: "Method not allowed" });
     }
     const newScream = {
         body: req.body.body,
-        userHandle: req.body.userHandle,
+        userHandle: req.body.handle,
         createdAt: new Date().toISOString()//admin.firestore.Timestamp.fromDate(new Date())
     };
 
