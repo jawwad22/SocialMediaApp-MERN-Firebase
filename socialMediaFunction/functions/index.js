@@ -11,7 +11,7 @@ const {
     insertScream
 } = require('./handlers/screams')
 const {
-    signup, login
+    signup, login, uploadImage
 
 } = require('./handlers/user')
 
@@ -29,6 +29,7 @@ app.post('/insertscreams', FBAuth, insertScream)
 //signUp route
 app.post('/signup', signup)
 app.post('/login', login)
+app.post('/user/image', FBAuth, uploadImage)
 
 
 
