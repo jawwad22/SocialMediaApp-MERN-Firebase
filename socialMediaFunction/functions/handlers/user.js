@@ -4,7 +4,8 @@ const config = require('../util/config')
 
 firebase.initializeApp(config)
 
-const { validateSignupData, validateLoginData } = require('../util/validators')
+const { validateSignupData, validateLoginData
+    , reduceUserDetails } = require('../util/validators')
 exports.signup = (req, res) => {
     const newUser = {
         email: req.body.email,
@@ -88,6 +89,19 @@ exports.login = (req, res) => {
             else {
                 return res.status(500).json({ error: err.code });
             }
+        })
+}
+//add User Details
+exports.addUserDetails = (req, res) => {
+    let userDetails = reduceUserDetails(req.body);
+
+    db.doc(`/users/${req.user.handle}`).update(userDetails)
+        .then(() => {
+            return res.json({ message: 'Details added Successfully' });
+        })
+        .catch(err => {
+            console.error(err);
+            return res.status(500).json({ error: err.code })
         })
 }
 
