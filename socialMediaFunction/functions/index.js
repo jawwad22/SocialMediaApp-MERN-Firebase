@@ -8,24 +8,27 @@ app.use(cors());
 
 const {
     getAllScreams,
-    insertScream
-} = require('./handlers/screams')
+    insertScream,
+    getScream,
+    commentOnScream
+        } = require('./handlers/screams')
 const {
-    signup, login, uploadImage,addUserDetails,
+    signup, 
+    login, 
+    uploadImage,
+    addUserDetails,
     getAuthenticatedUser
-
 } = require('./handlers/user')
-
-
-
-// Initialize Firebase
-
-// Create and Deploy Your First Cloud Functions
-// https://firebase.google.com/docs/functions/write-firebase-functions
 
 //Screams Route
 app.get('/getscreams', FBAuth, getAllScreams)
 app.post('/insertscreams', FBAuth, insertScream)
+app.get('/scream/:screamId',getScream);
+//Todo delete scream
+//Todo like a scream
+// unliking scream
+// comment on scream
+app.post('/scream/:screamId/comment',FBAuth,commentOnScream)
 
 //signUp route
 app.post('/signup', signup)
