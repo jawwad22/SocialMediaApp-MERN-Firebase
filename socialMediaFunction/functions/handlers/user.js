@@ -56,7 +56,7 @@ exports.signup = (req, res) => {
         })
         .catch(err => {
             console.error(err)
-            return res.status(500).json({ error: err.code })
+            return res.status(500).json({ general: 'Something went wrong,please try again later' })
         })
 
 
@@ -87,7 +87,7 @@ exports.login = (req, res) => {
                 })
             }
             else {
-                return res.status(500).json({ error: err.code });
+                return res.status(500).json({ general:'SWW,PTAL' });
             }
         })
 }
