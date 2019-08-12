@@ -28,7 +28,7 @@ const {
 } = require('./handlers/user')
 
 //Screams Route
-app.get('/getscreams', FBAuth, getAllScreams)
+app.get('/getscreams', getAllScreams)
 app.post('/insertscreams', FBAuth, insertScream)
 app.get('/scream/:screamId', getScream);
 app.delete('/scream/:screamId', FBAuth, deleteScream)
