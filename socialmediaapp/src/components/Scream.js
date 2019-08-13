@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
+import dayjs from 'dayjs';
+import relativeTime from 'dayjs/plugin/relativeTime'
 
 //MUI Stuff
 
@@ -14,17 +16,18 @@ const styles = {
         display: 'flex',
         marginBottom: 20,
     },
-    image:{
-        minWidth:200,
+    image: {
+        minWidth: 200,
     },
-    content:{
-        padding:25,
-        objectFit:'cover'
+    content: {
+        padding: 25,
+        objectFit: 'cover'
     }
 }
 
 class Scream extends Component {
     render() {
+        dayjs.extend(relativeTime)
         const { classes, scream: { body, createdAt, userImage, userHandle, screamId, likeCount, commentCount } } = this.props
         //const classes=this.props.classes
         return (
@@ -39,7 +42,7 @@ class Scream extends Component {
                         <Typography variant='h5' component={Link} to={`/users/${userHandle}`}
                             color='primary'
                         >{userHandle}</Typography>
-                        <Typography variant='body2' color='textSecondary'>{createdAt}</Typography>
+                        <Typography variant='body2' color='textSecondary'>{dayjs(createdAt).fromNow()}</Typography>
                         <Typography variant='body1'>{body}</Typography>
 
                     </CardContent>

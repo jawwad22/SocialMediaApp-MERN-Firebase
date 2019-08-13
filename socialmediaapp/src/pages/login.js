@@ -1,13 +1,140 @@
 import React, { Component } from 'react'
+import withStyles from '@material-ui/core/styles/withStyles'
+import PropTypes from 'prop-types';
+import AppIcon from '../images/icon.png'
+import axios from 'axios'
 
-export class Login extends Component {
+
+//Mui Stuff
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button'
+import CircularProgress from '@material-ui/core/CircularProgress'
+
+const Link= require('react-router-dom').Link
+
+const styles = {
+    form: {
+        textAlign: 'center'
+    },
+    image: {
+        margin: '20px auto 20px auto'
+    },
+    pageTitle: {
+        margin: '10px auto 20px auto'
+    },
+    textField: {
+        margin: '10px auto 20px auto'
+    },
+    button: {
+        marginTop: 20,
+        position:'relative'
+    },
+    customError:{
+        color:'red',
+        fontSize:'0.8rem',
+        marginTop:10
+    },
+    progress:{
+        position:'absolate'
+    }
+}
+
+
+class Login extends Component {
+
+    constructor() {
+        super();
+        this.state = {
+            email: '',
+            password: '',
+            loading: false,
+            errors: {}
+        }
+    }
+    handleSubmit = (event) => {
+        event.preventDefault();
+        this.setState({
+            loading: true
+        })
+        const userData = {
+            email: this.state.email,
+            password: this.state.password
+        }
+        axios.post('/login', userData)
+            .then(res => {
+                this.setState({
+                    loading: false
+                })
+                this.props.history.push('/')
+            })
+            .catch(err => {
+                console.log(err)
+                this.setState({
+                    errors: err.response.data,
+                    loading: false,
+                })
+            })
+    }
+    handleChange = (event) => {
+        this.setState({
+            [event.target.name]: event.target.value
+        })
+    }
     render() {
+        const { classes } = this.props;
+        const { errors, loading } = this.state
         return (
-            <div>
-                <h1>Login Page</h1>
-            </div>
+            <Grid
+                container className={classes.form}>
+                <Grid item sm />
+                <Grid item sm>
+                    <img src={AppIcon} alt="appIcon" className={classes.image} />
+                    <Typography varient="h2" className={classes.pageTitle}>
+                        Login
+                </Typography>
+                    <form noValidate onSubmit={this.handleSubmit}>
+                        <TextField id="email" name="email" type="email"
+                            label="Email" className={classes.textField}
+                            helperText={errors.email}
+                            error={errors.email ? true : false}
+                            value={this.state.email} onChange={this.handleChange}
+                            fullWidth />
+                        <TextField id="password" name="password" type="password"
+                            label="Password" className={classes.textField}
+                            helperText={errors.password}
+                            error={errors.password ? true : false}
+                            value={this.state.password} onChange={this.handleChange}
+                            fullWidth />
+                        <Button 
+                        disabled={loading}
+                        type='submit' varient="contained" color="primary" className={classes.button}>
+                            Login
+                            {loading &&(
+                                <CircularProgress 
+                                size={30}
+                                className={classes.progress}/>
+                            )}
+                            </Button>
+                            <br/>
+                            <small>dont have an account? sign up <Link to="/signup">here</Link></small>
+                            {errors.general &&(
+                                <Typography varient='body2' className={classes.customError}>
+                                    {errors.general}
+                                </Typography>
+                            )}
+                    </form>
+                </Grid>
+                <Grid item sm />
+
+            </Grid>
         )
     }
 }
 
-export default Login
+Login.propType = {
+    classes: PropTypes.object.isRequired
+}
+
+export default withStyles(styles)(Login);
