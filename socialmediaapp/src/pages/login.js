@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import withStyles from '@material-ui/core/styles/withStyles'
 import PropTypes from 'prop-types';
 import AppIcon from '../images/icon.png'
-import axios from 'axios'
 
 
 //Mui Stuff
@@ -12,13 +11,18 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-const Link= require('react-router-dom').Link
 
+//Redux Stuff
+import { connect } from 'react-redux';
+import { loginUser } from '../redux/actions/userActions'
 
+const Link = require('react-router-dom').Link
 
 const styles = (theme) => ({
     ...theme.spreadThis
-  });
+});
+
+
 class Login extends Component {
 
     constructor() {
@@ -26,34 +30,22 @@ class Login extends Component {
         this.state = {
             email: '',
             password: '',
-            loading: false,
             errors: {}
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.UI.errors) {
+            this.setState({ errors: nextProps.UI.errors })
         }
     }
     handleSubmit = (event) => {
         event.preventDefault();
-        this.setState({
-            loading: true
-        })
+
         const userData = {
             email: this.state.email,
             password: this.state.password
         }
-        axios.post('/login', userData)
-            .then(res => {
-                localStorage.setItem('FBIdToken', `Bearer ${res.data.token}`)
-                this.setState({
-                    loading: false
-                })
-                this.props.history.push('/')
-            })
-            .catch(err => {
-                console.log(err)
-                this.setState({
-                    errors: err.response.data,
-                    loading: false,
-                })
-            })
+        this.props.loginUser(userData, this.props.history);
     }
     handleChange = (event) => {
         this.setState({
@@ -61,8 +53,8 @@ class Login extends Component {
         })
     }
     render() {
-        const { classes } = this.props;
-        const { errors, loading } = this.state
+        const { classes, UI: { loading } } = this.props;
+        const { errors } = this.state
         return (
             <Grid
                 container className={classes.form}>
@@ -85,23 +77,23 @@ class Login extends Component {
                             error={errors.password ? true : false}
                             value={this.state.password} onChange={this.handleChange}
                             fullWidth />
-                        <Button 
-                        disabled={loading}
-                        type='submit' varient="contained" color="primary" className={classes.button}>
+                        <Button
+                            disabled={loading}
+                            type='submit' varient="contained" color="primary" className={classes.button}>
                             Login
-                            {loading &&(
-                                <CircularProgress 
-                                size={30}
-                                className={classes.progress}/>
+                            {loading && (
+                                <CircularProgress
+                                    size={30}
+                                    className={classes.progress} />
                             )}
-                            </Button>
-                            <br/>
-                            <small>dont have an account? sign up <Link to="/signup">here</Link></small>
-                            {errors.general &&(
-                                <Typography varient='body2' className={classes.customError}>
-                                    {errors.general}
-                                </Typography>
-                            )}
+                        </Button>
+                        <br />
+                        <small>dont have an account? sign up <Link to="/signup">here</Link></small>
+                        {errors.general && (
+                            <Typography varient='body2' className={classes.customError}>
+                                {errors.general}
+                            </Typography>
+                        )}
                     </form>
                 </Grid>
                 <Grid item sm />
@@ -112,7 +104,18 @@ class Login extends Component {
 }
 
 Login.propType = {
-    classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired,
+    loginUser: PropTypes.func.isRequired,
+    user: PropTypes.object.isRequired,
+    UI: PropTypes.object.isRequired
+}
+const mapStateToProps = (state) => ({
+    user: state.user,
+    UI: state.UI
+});
+
+const mapActionsToProps = {
+    loginUser
 }
 
-export default withStyles(styles)(Login);
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(Login));
