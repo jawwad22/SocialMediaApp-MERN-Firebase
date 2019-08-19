@@ -50,6 +50,7 @@ export const logoutUser=()=>(dispatch)=>{
     dispatch({type:SET_UNAUTHENTICATED})
 }
 export const getUserData = () => (dispatch) => {
+    dispatch({type:LOADING_USER});
 axios.get('/user')
 .then(res=>{
     dispatch({
