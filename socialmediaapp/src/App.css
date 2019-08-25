@@ -12,7 +12,10 @@
     max-width: 1200px;
  }
  .nav-container{
-    margin:auto;
+    margin:auto; 
+ }
+ .nav-container svg {
+    color: #fff;
  }
  a{
     text-decoration: none

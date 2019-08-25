@@ -12,7 +12,6 @@ class Home extends Component {
     componentDidMount() {
         axios.get('/getscreams')
             .then(res => {
-                console.log(res.data)
                 this.setState({
                     screams: res.data
                 })
