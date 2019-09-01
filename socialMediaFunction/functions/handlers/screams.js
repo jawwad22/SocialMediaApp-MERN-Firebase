@@ -31,16 +31,13 @@ exports.getAllScreams = (req, res) => {
 
 exports.insertScream = (req, res) => {
 
-    if (req.method !== "POST") {
-        return res.status(400).json({ err: "Method not allowed" });
-    }
     if (req.body.body.trim() === '') {
-        return res.status(400).json({ err: "Body must not be empty" });
+        return res.status(400).json({ error: "Body must not be empty" });
 
     }
     const newScream = {
         body: req.body.body,
-        userHandle: req.body.userHandle,
+        userHandle: req.user.handle,
         userImage: req.user.imageUrl,
         createdAt: new Date().toISOString(),//admin.firestore.Timestamp.fromDate(new Date())
         likeCount: 0,
