@@ -5,6 +5,7 @@ import relativeTime from 'dayjs/plugin/relativeTime'
 import PropTypes from 'prop-types';
 import MyButton from '../../util/MyButton'
 import DeleteScream from './DeleteScream';
+import ScreamDialog from './ScreamDialog';
 
 //MUI Stuff
 
@@ -27,7 +28,7 @@ const Link = require('react-router-dom').Link;
 
 const styles = {
     card: {
-        position:'relative',
+        position: 'relative',
         display: 'flex',
         marginBottom: 20,
     },
@@ -42,10 +43,10 @@ const styles = {
 
 class Scream extends Component {
     likedScream = () => {
-        if (this.props.user.likes && 
+        if (this.props.user.likes &&
             this.props.user.likes.find(
-            like => like.screamId === this.props.scream.screamId
-        ))
+                like => like.screamId === this.props.scream.screamId
+            ))
             return true;
         else return false;
     }
@@ -76,7 +77,7 @@ class Scream extends Component {
                 this.likedScream() ? (
                     <MyButton tip='Undo Like' onClick={this.unlikeScream}>
                         <FavoriteIcon color='primary' />
-                    </MyButton> 
+                    </MyButton>
                 ) : (
                         <MyButton tip='Like' onClick={this.likeScream}>
                             <FavoriteBorder color='primary' />
@@ -84,9 +85,9 @@ class Scream extends Component {
                     )
             )
 
-            const deleteButton=authenticated && userHandle===handle?(
-                <DeleteScream screamId={screamId}/>
-            ):(null)
+        const deleteButton = authenticated && userHandle === handle ? (
+            <DeleteScream screamId={screamId} />
+        ) : (null)
         //const classes=this.props.classes
         return (
             <div>
@@ -103,7 +104,7 @@ class Scream extends Component {
                         </Typography>
                         {deleteButton}
                         <Typography variant='body2' color='textSecondary'>{dayjs(createdAt).fromNow()}</Typography>
-                        
+
                         <Typography variant='body1'>{body}</Typography>
                         {likeButton}
                         <span>{likeCount} Like</span>
@@ -111,6 +112,7 @@ class Scream extends Component {
                             <ChatIcon color="primary" />
                         </MyButton>
                         <span>{commentCount} comments</span>
+                        <ScreamDialog screamId={screamId} userHandle={userHandle} />
                     </CardContent>
 
                 </Card>

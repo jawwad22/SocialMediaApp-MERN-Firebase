@@ -36,7 +36,6 @@ export const signupUser = (newUserData, history) => (dispatch) => {
             history.push('/login')
         })
         .catch(err => {
-            console.log(err)
             dispatch({
                 type: SET_ERRORS,
                 payload: err.response.data
@@ -58,7 +57,9 @@ export const getUserData = () => (dispatch) => {
                 payload: res.data
             })
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err)
+        });
 }
 
 export const uploadImage = (formData) => (dispatch) => {

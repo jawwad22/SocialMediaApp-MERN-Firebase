@@ -10,17 +10,18 @@ import { connect } from 'react-redux';
 import { getScreams } from '../redux/actions/dataActions';
 
 class Home extends Component {
-   
+
     componentDidMount() {
         this.props.getScreams();
     }
     render() {
-        const {screams,loading}=this.props.data
-        let recentScreamMarkup = !loading ?(
-            screams.map((scream,i) =><Scream key={i} scream={scream} />)
-            ) : (
+        const { screams, loading } = this.props.data
+        let recentScreamMarkup = !loading ? (
+            screams.map((scream, i) => <Scream key={i} scream={scream} />)
+        ) : (
                 <p>Loading....</p>
             )
+        console.log('SCREAMS', this.props.data)
         return (
             <Grid container spacing={10}>
                 <Grid item sm={8} xs={12}>
@@ -37,13 +38,13 @@ class Home extends Component {
 Home.propTypes = {
     getScreams: PropTypes.func.isRequired,
     data: PropTypes.object.isRequired
-  };
+};
 
 const mapStateToProps = (state) => ({
     data: state.data
-  });
+});
 
 export default connect(
     mapStateToProps,
     { getScreams }
-  )(Home);
+)(Home);

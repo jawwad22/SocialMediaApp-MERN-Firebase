@@ -50,7 +50,7 @@ exports.insertScream = (req, res) => {
         .then(doc => {
             const resScream = newScream;
             resScream.screamId = doc.id;
-            res.json({ message: `document ${doc.id} creted sucessfully` })
+            res.json(resScream)
         })
         .catch(err => {
             res.status(500).json({ error: 'Something Went Wrong' })
