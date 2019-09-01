@@ -4,7 +4,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import MyButton from '../../util/MyButton';
 import LikeButton from './LikeButton';
 import Comments from './Comments';
-// import CommentForm from './CommentForm';
+import CommentForm from './CommentForm';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
 // MUI Stuff
@@ -68,14 +68,16 @@ class ScreamDialog extends Component {
             // oldPath, newPath
         });
         this.props.getScream(this.props.screamId);
+        
     };
     handleClose = () => {
         // window.history.pushState(null, null, this.state.oldPath);
         this.setState({ open: false });
-        // this.props.clearErrors();
+        this.props.clearErrors();
     };
 
     render() {
+        console.log('PROPS',this.props.scream.comments)
         const {
             classes,
             scream: {
@@ -122,7 +124,7 @@ class ScreamDialog extends Component {
                         <span>{commentCount} comments</span>
                     </Grid>
                     <hr className={classes.visibleSeparator} />
-                    {/* <CommentForm screamId={screamId} /> */}
+                    <CommentForm screamId={screamId} />
                     <Comments comments={comments} />
                 </Grid>
             );
@@ -158,7 +160,7 @@ class ScreamDialog extends Component {
 }
 
 ScreamDialog.propTypes = {
-    // clearErrors: PropTypes.func.isRequired,
+    clearErrors: PropTypes.func.isRequired,
     getScream: PropTypes.func.isRequired,
     screamId: PropTypes.string.isRequired,
     userHandle: PropTypes.string.isRequired,
@@ -173,7 +175,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
     getScream,
-    // clearErrors
+    clearErrors
 };
 
 export default connect(
