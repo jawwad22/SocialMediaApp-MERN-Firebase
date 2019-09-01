@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import withStyles from '@material-ui/core/styles/withStyles';
 import MyButton from '../../util/MyButton';
 import LikeButton from './LikeButton';
-// import Comments from './Comments';
+import Comments from './Comments';
 // import CommentForm from './CommentForm';
 import dayjs from 'dayjs';
 import { Link } from 'react-router-dom';
@@ -86,7 +86,7 @@ class ScreamDialog extends Component {
                 commentCount,
                 userImage,
                 userHandle,
-                // comments
+                comments
             },
             UI: { loading }
         } = this.props;
@@ -123,7 +123,7 @@ class ScreamDialog extends Component {
                     </Grid>
                     <hr className={classes.visibleSeparator} />
                     {/* <CommentForm screamId={screamId} /> */}
-                    {/* <Comments comments={comments} /> */}
+                    <Comments comments={comments} />
                 </Grid>
             );
         return (
