@@ -20,8 +20,8 @@ class Home extends Component {
         ) : (
                 <p>Loading....</p>
             )
-        console.log('SCREAMS', this.props.data)
-        return (
+
+            return (
             <Grid container spacing={10}>
                 <Grid item sm={8} xs={12}>
                     {recentScreamMarkup}

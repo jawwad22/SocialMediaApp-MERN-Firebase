@@ -53,7 +53,6 @@ export const postScream = (newScream) => (dispatch) => {
   axios
     .post('/insertscreams', newScream)
     .then((res) => {
-      console.log('POSTSCREAM',res)
       dispatch({
         type: POST_SCREAM,
         payload: res.data
@@ -96,7 +95,6 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
   axios
     .post(`/scream/${screamId}/comment`, commentData)
     .then((res) => {
-      console.log('RES',res)
       dispatch({
         type: SUBMIT_COMMENT,
         payload: res.data
@@ -104,7 +102,6 @@ export const submitComment = (screamId, commentData) => (dispatch) => {
       dispatch(clearErrors());
     })
     .catch((err) => {
-      console.log('ERR',err)
       dispatch({
         type: SET_ERRORS,
         payload: err.response.data
